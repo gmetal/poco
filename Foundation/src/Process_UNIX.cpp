@@ -197,9 +197,11 @@ ProcessHandleImpl* ProcessImpl::launchByForkExecImpl(const std::string& command,
 		if (outPipe) outPipe->close(Pipe::CLOSE_BOTH);
 		if (errPipe) errPipe->close(Pipe::CLOSE_BOTH);
 		// close all open file descriptors other than stdin, stdout, stderr
-		for (int i = 3; i < getdtablesize(); ++i)
+		struct rlimit rlim;
+		memset(&rlim, 0, sizeof(struct rlimit));
+		getrlimit(RLIMIT_FSIZE, &rlim);
+		for (int i = 3; i < rlim.rlim_cur; ++i)
 			close(i);
-
 		char** argv = new char*[args.size() + 2];
 		int i = 0;
 		argv[i++] = const_cast<char*>(command.c_str());
