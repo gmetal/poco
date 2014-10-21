@@ -217,7 +217,12 @@
 	#else
 		#define POCO_ARCH_BIG_ENDIAN 1
 	#endif
-
+#elif defined(__AARCH64EL__)
+	#define POCO_ARCH POCO_ARCH_AARCH64
+	#define POCO_ARCH_LITTLE_ENDIAN 1
+#elif defined(__AARCH64EB__)
+	#define POCO_ARCH POCO_ARCH_AARCH64
+	#define POCO_ARCH_BIG_ENDIAN 1
 #endif
 
 
